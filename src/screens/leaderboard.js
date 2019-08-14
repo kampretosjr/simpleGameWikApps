@@ -21,7 +21,7 @@ export class sideeffect extends Component {
   }
 
   render() {
-    const {LeaderB,i} = this.state
+    const {LeaderB} = this.state
 
 
     console.log("aa",LeaderB)
@@ -37,14 +37,15 @@ export class sideeffect extends Component {
                 <View style={ index === 0 ? styles.root:styles.aa}>
                 <ListItem  style={ index === 0 ? styles.root:styles.aa} thumbnail>
                   
-                    <Left style={ index === 0 ? styles.root:styles.aa}>
+                    <Left>
                     <View>
-                      {
-                        index +1 == 1 ? <Icon name={"ios-trophy"} type={"Ionicons"} style={ styles.nomer} /> :
+                      { 
+                        index +1 == 1 ? 
+                        <Icon name={"ios-trophy"} type={"Ionicons"} style={ styles.nomer} /> :
                         <Text style={ styles.nomerz}> { index+1 }</Text>
                       }
                     </View>
-                      <Thumbnail style={ index === 0 ? styles.root:styles.aa} source={{ uri: `${item.foto}` }} />
+                      <Thumbnail  source={{ uri: `${item.foto}` }} />
                     </Left>
                     <Body  >
                       <Text>{item.username} </Text>
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBD602'
   },
   aa: {
-    backgroundColor: '#ffffff'
+    backgroundColor: '#e8e8e8'
   },
   nomer: {
     top: 14.23,

@@ -8,20 +8,20 @@ const initialState = {
 const buku = (state = initialState, action) => {
   switch (action.type) {
 /////////////////////////////////////////////////////    
-  case 'GET_BOOKS_PENDING':
+  case 'GET_PLAYERS_PENDING':
     return {
       ...state,
       isLoading: true,
       isFulfilled: false,
       isRejected: false,
     };
-  case 'GET_BOOKS_REJECTED':
+  case 'GET_PLAYERS_REJECTED':
     return {
       ...state,
       isLoading: false,
       isRejected: true,
     };
-  case 'GET_BOOKS_FULFILLED':
+  case 'GET_PLAYERS_FULFILLED':
     return {
       ...state,
       isLoading: false,
@@ -29,20 +29,20 @@ const buku = (state = initialState, action) => {
       ListPlayer: action.payload.data,
     };
 ///////////POST////////////////////////////////////////////
-    case "POST_BOOK_PENDING":
+    case "POST_PLAYER_PENDING":
         return {
           ...state,
           isLoading: true,
           isRejected: false,
           isFulfilled: false
         };
-    case "POST_BOOK_REJECTED":
+    case "POST_PLAYER_REJECTED":
       return {
         ...state,
         isLoading: false,
         isRejected: true
       };
-    case "POST_BOOK_FULFILLED":
+    case "POST_PLAYER_FULFILLED":
       return {
         ...state,
         isLoading: false,
@@ -50,20 +50,20 @@ const buku = (state = initialState, action) => {
         ListPlayer: action.payload.data
       };
 /////////////GET1//////////////////////////////////////////
-    case 'GET_BOOK1_PENDING': // in case when loading post data
+    case 'GET_PLAYER1_PENDING': // in case when loading post data
       return {
         ...state,
         isLoading: true,
         isFulFilled: false,
         isRejected: false
         }
-    case 'GET_BOOK1_REJECTED': // in case error network/else
+    case 'GET_PLAYER1_REJECTED': // in case error network/else
         return {
             ...state,
             isLoading: false,
             isRejected: true,
         }
-    case 'GET_BOOK1_FULFILLED': // in case successfuly post data
+    case 'GET_PLAYER1_FULFILLED': // in case successfuly post data
         return {
             ...state,
             isLoading: false,
@@ -71,20 +71,20 @@ const buku = (state = initialState, action) => {
             ListPlayer: action.payload.data,
         }
 ///////////////DELETE////////////////////////////////////////        
-      case 'DELETE_BOOK_PENDING': // in case when loading post data
+      case 'DELETE_PLAYER_PENDING': // in case when loading post data
           return {
               ...state,
               isLoading: true,
               isFulFilled: false,
               isRejected: false
           }
-      case 'DELETE_BOOK_REJECTED': // in case error network/else
+      case 'DELETE_PLAYER_REJECTED': // in case error network/else
           return {
               ...state,
               isLoading: false,
               isRejected: true,
           }
-      case 'DELETE_BOOK_FULFILLED': // in case successfuly post data
+      case 'DELETE_PLAYER_FULFILLED': // in case successfuly post data
           return {
               ...state,
               isLoading: false,
@@ -92,20 +92,20 @@ const buku = (state = initialState, action) => {
               ListPlayer: [state.ListPlayer, action.payload.data[0]],
           }
 //////////////UPDATE/////////////////////////////////////////          
-      case 'UPDATE_BOOK_PENDING': // in case when loading post data
+      case 'UPDATE_PLAYER_PENDING': // in case when loading post data
           return {
               ...state,
               isLoading: true,
               isFulFilled: false,
               isRejected: false
           }
-      case 'UPDATE_BOOK_REJECTED': // in case error network/else
+      case 'UPDATE_PLAYER_REJECTED': // in case error network/else
           return {
               ...state,
               isLoading: false,
               isRejected: true,
           }
-      case 'UPDATE_BOOK_FULFILLED': // in case successfuly post data
+      case 'UPDATE_PLAYER_FULFILLED': // in case successfuly post data
           return {
               ...state,
               isLoading: false,

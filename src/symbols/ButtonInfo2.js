@@ -11,21 +11,4 @@ export default class CupertinoButtonInfo2 extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: "rgba(64,255,0,1)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingRight: 16,
-    paddingLeft: 16,
-    borderRadius: 100
-  },
-  caption: {
-    color: "rgba(7,7,7,1)",
-    fontSize: 25,
-    fontFamily: "roboto-900",
-    fontWeight: "500"
-  }
-});
+

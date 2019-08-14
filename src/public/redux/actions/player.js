@@ -3,42 +3,41 @@ import URL from "../URL";
 // let URL = 'http://192.168.6.169:5000'
 //let URL = 'http://localhost:5000'
 
-export const getBuku = () => {
+export const getPlayer = () => {
   return {
-    type: 'GET_BOOKS',
-    payload: axios.get(URL+'/buku'),
+    type: 'GET_PLAYERS',
+    payload: axios.get(URL+'/player'),
   };
 };
 /////////////////////////////////////////////
-export const postBuku = (data) => {
+export const postPlayer = (data) => {
   //console.log('ini dari aksi',data[0]);
   return {
-    type: "POST_BOOK",
-    // payload: axios.post(URL+'/buku', data[0])
-    payload: axios.post(URL+'/buku', data,{})
+    type: "POST_PLAYER",
+    payload: axios.post(URL+'/player', data,{})
   };
 };
-/////////////////////////////////////////////
-export const deleteBuku = (param) =>{
+/////////////////////////////////////////////   BUAT LOGOUT   
+export const deletePlayer = (param) =>{
   //console.log('action id', param)
 	return{
-    type: 'DELETE_BOOK',
-		payload: axios.delete(URL +`/buku/${param}`)
+    type: 'DELETE_PLAYER',
+		payload: axios.patch(URL +`/player/${param}`)
 	}
 }
 /////////////////////////////////////////////
 export const getBuku1 = (bookid) => {
   console.log("book id: " + bookid)
   return {
-      type: 'GET_BOOK1',
-      payload: axios.get(URL +`/buku/${bookid}`)
+      type: 'GET_PLAYER1',
+      payload: axios.get(URL +`/player/${bookid}`)
   }
 }
 /////////////////////////////////////////////
-export const updateBuku = (bookid, data) => {
+export const updatePlayer = (bookid, data) => {
   //console.log("book id: " + bookid)
   return {
-      type: 'UPDATE_BOOK',
-      payload: axios.patch(URL +`/buku/${bookid}`, data)
+      type: 'UPDATE_PLAYER',
+      payload: axios.patch(URL +`/player/${bookid}`, data)
   }
 }
