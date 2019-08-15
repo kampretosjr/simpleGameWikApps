@@ -1,116 +1,149 @@
-import React, { Component } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity
-} from "react-native";
+import React, { Component } from 'react'
+import { Text, View, StyleSheet, Image, AsyncStorage as storage } from 'react-native'
+import { Header, Left, Body, Form, Item, Label, Input, Container, Button, Icon } from 'native-base'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { connect } from 'react-redux'
+import { loginPlayer } from '../public/redux/actions/player'
 
 class Login extends Component {
-  render() {
-    return (
-      <View style={style.body}>
-        <View>
-          <Image
-            style={{
-              width: "100%",
-              height: 120
-            }}
-            source={require("../assets/images/Vector.png")}
-          />
-          <Text style={style.textlogin}> SIGN IN </Text>
-          <Text style={style.textKuy}>Kuy Musik</Text>
-          <Text style={style.textJos}>Jos Jos Aye Aye</Text>
-          <Text style={style.textGame}>Game</Text>
-          <Text style={style.textPlease}>Welcome, Please login here</Text>
-        </View>
-        <View style={style.formLogin}>
-          <TextInput style={style.textInput} placeholder="Username" />
-          <TextInput style={style.textInput} placeholder="Password" />
-          <Button
-            color="#20a8e0"
-            title="Sign In"
-            accessibilityLabel="Learn more about this purple button"
-          />
-        </View>
-        <View style={style.footer}>
-          <TouchableOpacity style={{ flex: 1 }}>
-            <Text>Sign up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1, alignItems: "flex-end" }}>
-            <Text>Forget Password</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            users: [],
+            username: '',
+            password: ''
+        }
+    }
+
+    _signInAsync = async (data) => {
+        await this.props.dispatch(loginPlayer(data))
+            .then(() => {
+                alert('Login successfully!')
+                this.setState({
+                    users: this.props.propalyer,
+                    username: '',
+                    password: ''
+                })
+                storage.setItem('token')
+                this.props.navigation.navigate('App')
+            })
+            .catch(() => {
+                alert('username atau password salah!')
+            })
+    }
+
+    render() {
+        const { username, password } = this.state
+        const data = {
+            username: username,
+            password: password
+        }
+        return (
+            <Container>
+                <Header>
+                    <Left style={styles.leftSide}>
+                        <Text style={styles.txtLogin}>Login</Text>
+                    </Left>
+                    <Body>
+                        <Text></Text>
+                    </Body>
+                </Header>
+                <Image source={require('../assets/images/output-onlinepngtools-(3).png')} style={styles.img} />
+                <View style={{ marginTop: 100 }}>
+                    <Form style={styles.container}>
+                        <Item floatingLabel>
+                            <Label style={{ color: 'teal' }}>Username</Label>
+                            <Input onChangeText={username => this.setState({ username })} />
+                        </Item>
+                        <Item floatingLabel>
+                            <Label style={{ color: 'teal' }}>Password</Label>
+                            <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} />
+                        </Item>
+                    </Form>
+                    <View style={styles.viewAction}>
+                        <TouchableOpacity
+                            style={styles.btnSignUp}
+                            onPress={() => this.props.navigation.navigate('Register')}
+                        >
+                            <Text style={styles.txtSignUp}>Sign Up</Text>
+                        </TouchableOpacity>
+                        <Button
+                            rounded
+                            primary
+                            style={styles.btnSignIn}
+                            onPress={() => this._signInAsync(data)}
+                        >
+                            <Icon name="arrow-right" type="FontAwesome" />
+                        </Button>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={styles.btnSkip}
+                    onPress={() => {
+                        this.props.navigation.navigate('Home')
+                    }}
+                >
+                    <Text style={styles.txtBtnSkip}>SKIP >></Text>
+                </TouchableOpacity>
+            </Container >
+        )
+    }
 }
 
-export default Login;
-const style = StyleSheet.create({
-  body: {
-    flex: 1,
-    backgroundColor: "white"
-  },
-  textlogin: {
-    position: "absolute",
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "#fff",
-    marginTop: "9%",
-    marginLeft: "3%"
-  },
-  textKuy: {
-    marginTop: "19%",
-    marginLeft: "50%",
-    color: "#f79237",
-    position: "absolute",
-    fontSize: 38,
-    fontWeight: "bold",
-    fontStyle: "italic"
-  },
-  textJos: {
-    marginTop: "30%",
-    marginLeft: "64%",
-    color: "#f79237",
-    position: "absolute",
-    fontSize: 14
-  },
-  textGame: {
-    marginTop: "20%",
-    marginLeft: "58%",
-    color: "#f79237",
-    position: "absolute",
-    fontSize: 14
-  },
-  textPlease: {
-    marginTop: "55%",
-    margin: "25%",
-    color: "#f79237",
-    position: "absolute",
-    fontSize: 14
-  },
-  formLogin: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    margin: "10%"
-  },
-  textInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 24,
-    marginBottom: "5%",
-    padding: 10
-  },
-  footer: {
-    flexDirection: "row",
-    margin: "3%"
-  }
-});
+const styles = StyleSheet.create({
+    txtBtnSkip: {
+        color: 'blue',
+        textDecorationLine: 'underline'
+    },
+    btnSkip: {
+        alignSelf: 'center',
+        margin: 0,
+        bottom: 0
+    },
+    img: {
+        position: 'absolute',
+        alignSelf: 'flex-end'
+    },
+    viewAction: {
+        marginVertical: 60,
+        marginHorizontal: 40
+    },
+    btnSignIn: {
+        width: 50,
+        height: 50,
+        marginLeft: 'auto'
+    },
+    btnSignUp: {
+        marginRight: 'auto',
+    },
+    txtSignUp: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 20
+    },
+    leftSide: {
+        marginHorizontal: 20
+    },
+    txtLogin: {
+        fontFamily: 'Open Sans',
+        fontWeight: 'bold',
+        color: 'white',
+        fontSize: 25
+    },
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginHorizontal: 30
+    }
+})
 
-  
+const mapStateToProps = state => {
+    return {
+        propalyer: state.rePlayer.ListPlayer.result
+    }
+}
+
+export default connect(mapStateToProps)(Login)

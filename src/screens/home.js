@@ -18,7 +18,7 @@ export class home extends Component {
       hasil: 0,
       combo: 5,
       score: 0,
-      pattern: [1,2,3,1,2,3,1,2,3,2,2,1],
+      pattern: [1,2,3],
       isNow: 0,
       showToast:false,
       config:[],
@@ -34,7 +34,24 @@ export class home extends Component {
     this.setState({ config });
   }
 
-  LAGUNYA(nada,tombol) {
+  LAGUNYA = async (nada,tombol) =>{
+        if (this.state.timer) { 
+          clearTimeout(this.state.timer); 
+          await this.setState({ timer :null }) 
+        }
+
+        await this.setState({
+          timer :setTimeout(()=>{ 
+            alert("skor anda" + this.state.score );
+             this.setState({
+              hit:this.state.hit * 0,
+              score: this.state.score * 0,
+              combo: this.state.combo * 0,
+              isNow: this.state.isNow * 0,
+            })
+          }, 3000)
+        })
+        
         this.suara = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
             if (err) {return;}
             this.suara.play(() => this.suara.release());
@@ -42,9 +59,11 @@ export class home extends Component {
 
             if (this.state.pattern[this.state.isNow] === tombol) {
               if (this.state.pattern.length -1 <= this.state.isNow   ) {
-                this.setState({
+                clearTimeout(this.state.timer); 
+                await this.setState({
                       combo: this.state.combo + 1,
-                      isNow: this.state.isNow * 0
+                      isNow: this.state.isNow * 0,
+                      timer :null
                   })
                   setTimeout(()=>{  
                       const next = new Sound('gtr.wav',Sound.MAIN_BUNDLE,  err => {
@@ -52,44 +71,40 @@ export class home extends Component {
                       next.play(() => next.release()); });
                     }, 300)
                     
-              } else{
-                this.setState({
+              } else{                
+
+                await this.setState({
                   score: this.state.score + 10,
-                  isNow: this.state.isNow + 1
+                  isNow: this.state.isNow + 1,
               })
               }
           }
           else {
-              alert('salah kombo coeg')
-              this.setState({
-                  score: 0,
-                  hasil: 0,
-                  isNow: 0,
-                  combo: 5
-              })
-          }
-          this.setState({
+            clearTimeout(this.state.timer); 
+            alert('salah kombo coeg')
+            await this.setState({
+              score: 0,
+              hasil: 0,
+              isNow: 0,
+              combo: 5,
+              timer :null,
+              hit:0 
+            })
+        }
+
+        await this.setState({
               button: this.state.pattern[this.state.isNow]
           })
 
-        this.setState({ hit:this.state.hit + 1 })
+          await this.setState({ hit:this.state.hit + 1 })
+    }
 
-        if (this.state.timer) { 
-            clearTimeout(this.state.timer); 
-            this.setState({ timer :null }) 
-          }
-
-        this.setState({
-          timer :setTimeout(()=>{ 
-            // alert("skor anda" + this.state.score );
-            this.setState({
-              hit:this.state.hit * 0,
-              score: this.state.score * 0,
-              combo: this.state.combo * 0,
-            })
-            
-          }, 2000)
-        })
+    killTime(){
+      alert('stet')
+      this.setState({
+        timer :null,
+      })
+      clearTimeout(this.state.timer); 
     }
 
     LOOPs(nada,tombol) {
@@ -158,7 +173,9 @@ export class home extends Component {
                 <Text>MATIKEUN</Text>
             </Button>
           }
-          
+            <Button onPressIn={()=> this.killTime()} style={{top: 458.45}} block primary>
+                <Text>MATIKEUN</Text>
+            </Button>
 
         <CupertinoToolbar style={styles.cupertinoToolbar} />
       </View>

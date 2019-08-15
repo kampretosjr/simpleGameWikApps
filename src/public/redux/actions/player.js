@@ -17,12 +17,20 @@ export const postPlayer = (data) => {
     payload: axios.post(URL+'/player', data,{})
   };
 };
+/////////////////////////////////////////////
+export const loginPlayer = (data) => {
+  //console.log('ini dari aksi',data[0]);
+  return {
+    type: "POST_LOGIN_PLAYER",
+    payload: axios.post(URL+'/player/login', data)
+  };
+};
 /////////////////////////////////////////////   BUAT LOGOUT   
-export const deletePlayer = (param) =>{
+export const logout = (param) =>{
   //console.log('action id', param)
 	return{
-    type: 'DELETE_PLAYER',
-		payload: axios.patch(URL +`/player/${param}`)
+    type: 'LOGOUT_PLAYER',
+		payload: axios.patch(URL +`/player/logout${param}`)
 	}
 }
 /////////////////////////////////////////////

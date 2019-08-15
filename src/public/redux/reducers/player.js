@@ -1,3 +1,5 @@
+import {AsyncStorage as tampung} from 'react-native'
+
 const initialState = {
   ListPlayer: [],
   isLoading: false,
@@ -49,6 +51,34 @@ const buku = (state = initialState, action) => {
         isFulfilled: true,
         ListPlayer: action.payload.data
       };
+/////////// POST LOGIN ////////////////////////////////////////////
+    case "POST_LOGIN_PLAYER_PENDING":
+      return {
+        ...state,
+        isLoading: true,
+        isRejected: false,
+        isFulfilled: false
+      };
+    case "POST_LOGIN_PLAYER_REJECTED":
+      return {
+        ...state,
+        isLoading: false,
+        isRejected: true
+      };
+    case "POST_LOGIN_PLAYER_FULFILLED":
+      tampung.setItem("id_player",action.payload.data.result.id_player.toString())
+      tampung.setItem("username",action.payload.data.result.username)
+      tampung.setItem("email",action.payload.data.result.email)
+      tampung.setItem("foto",action.payload.data.result.foto)
+
+      tampung.setItem("token",action.payload.data.result.token)
+
+      return {
+        ...state,
+        isLoading: false,
+        isFulfilled: true,
+        ListPlayer: action.payload.data
+      };
 /////////////GET1//////////////////////////////////////////
     case 'GET_PLAYER1_PENDING': // in case when loading post data
       return {
@@ -71,20 +101,20 @@ const buku = (state = initialState, action) => {
             ListPlayer: action.payload.data,
         }
 ///////////////DELETE////////////////////////////////////////        
-      case 'DELETE_PLAYER_PENDING': // in case when loading post data
+      case 'LOGOUT_PLAYER_PENDING': // in case when loading post data
           return {
               ...state,
               isLoading: true,
               isFulFilled: false,
               isRejected: false
           }
-      case 'DELETE_PLAYER_REJECTED': // in case error network/else
+      case 'LOGOUT_PLAYER_REJECTED': // in case error network/else
           return {
               ...state,
               isLoading: false,
               isRejected: true,
           }
-      case 'DELETE_PLAYER_FULFILLED': // in case successfuly post data
+      case 'LOGOUT_PLAYER_FULFILLED': // in case successfuly post data
           return {
               ...state,
               isLoading: false,
