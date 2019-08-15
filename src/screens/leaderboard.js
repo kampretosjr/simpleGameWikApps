@@ -73,7 +73,6 @@ const mapStateToProps = state => {
     Lead: state.reLeaderboard.ListLeaderboard.result
   };
 };
-
 export default connect(mapStateToProps)(sideeffect)
 const styles = StyleSheet.create({
   root: {

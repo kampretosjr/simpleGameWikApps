@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Image,Text } from "react-native";
+import { StyleSheet,Text, View, Image,FlatList,TouchableOpacity } from "react-native";
+import { Container,  Content, List, ListItem, Thumbnail,Button,  Left, Body, Right } from 'native-base';
 import PENCETAN from "../symbols/ButtonInfo";
 import CupertinoHeaderWithAddButton from "../symbols/HeaderWithAddButton";
 import CupertinoToolbar from "../symbols/Toolbar";
-import {Toast} from 'native-base'
 import { connect } from 'react-redux'
 import Sound from "react-native-sound";
+import { getConfig } from "../public/redux/actions/gameconfig";
 
 export class home extends Component {
   constructor(props) {
@@ -17,32 +18,46 @@ export class home extends Component {
       hasil: 0,
       combo: 5,
       score: 0,
-      pattern: [1,2,1,3,1,2],
+      pattern: [1,2,3,1,2,3,1,2,3,2,2,1],
       isNow: 0,
-      showToast:false
+      showToast:false,
+      config:[],
+      pause: false,
+      loop:false
+
       }
   }
 
+  async componentDidMount() {
+    await this.props.dispatch(getConfig());
+    const config = await this.props.GameConfig;
+    this.setState({ config });
+  }
+
   LAGUNYA(nada,tombol) {
-        const s = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
+        this.suara = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
             if (err) {return;}
-            s.play(() => s.release());
+            this.suara.play(() => this.suara.release());
         });
 
             if (this.state.pattern[this.state.isNow] === tombol) {
-              if (this.state.pattern.length -1 === this.state.isNow   ) {
-                  this.setState({
+              if (this.state.pattern.length -1 <= this.state.isNow   ) {
+                this.setState({
                       combo: this.state.combo + 1,
                       isNow: this.state.isNow * 0
                   })
-                  const next = new Sound('gtr.wav',Sound.MAIN_BUNDLE,  err => {
-                    if (err) {return;}
-                    next.play(() => next.release()); });
-              }
-              this.setState({
+                  setTimeout(()=>{  
+                      const next = new Sound('gtr.wav',Sound.MAIN_BUNDLE,  err => {
+                      if (err) {return;}
+                      next.play(() => next.release()); });
+                    }, 300)
+                    
+              } else{
+                this.setState({
                   score: this.state.score + 10,
                   isNow: this.state.isNow + 1
               })
+              }
           }
           else {
               alert('salah kombo coeg')
@@ -66,7 +81,7 @@ export class home extends Component {
 
         this.setState({
           timer :setTimeout(()=>{ 
-            alert("skor anda" + this.state.score );
+            // alert("skor anda" + this.state.score );
             this.setState({
               hit:this.state.hit * 0,
               score: this.state.score * 0,
@@ -75,10 +90,30 @@ export class home extends Component {
             
           }, 2000)
         })
-}
+    }
 
+    LOOPs(nada,tombol) {
+      if (this.state.loop == false ) {
+        this.suara = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
+        this.suara.setNumberOfLoops(-1);
+        this.suara.setVolume(0.35);
+        this.suara.play(() => this.suara.release());
+        });
+          this.setState({
+            loop:true
+          })
+      } 
+      else {
+        this.suara.setVolume(0);
+        this.setState({
+          loop:false
+        })
+      }
+    }
+    
   render() {
-    console.warn("pola",this.state.pattern[this.state.isNow])
+    const {config} = this.state
+    console.log("aa",config)
     console.log("isnow",this.state.isNow)
     return (
       <View style={styles.root}>
@@ -87,32 +122,56 @@ export class home extends Component {
           resizeMode={"stretch"}
           style={styles.image}
         />        
-        <Text style={styles.score}>score {this.state.score} </Text>
-        <Text style={styles.text}>HIT {this.state.hit} </Text>
-        <Text style={styles.combo}>combo {this.state.isNow} </Text>
-        <FlatList
-            data={LeaderB}
-            keyExtractor={item => item.id_leaderboard}
-            renderItem={({ item, index }) => {
-              return (
-                <View>
-                  <PENCETAN sound={ ()=> this.LAGUNYA('wik.wav',1)} nama="wik" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles.wikBig : styles.wik } />
-                </View>
-              );
-            }}
-          />
-        <PENCETAN sound={ ()=> this.LAGUNYA('wik.wav',1)} nama="wik" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles.wikBig : styles.wik } />
-        <PENCETAN sound={ ()=> this.LAGUNYA('ihh.wav',2)} nama="ihh" styletext={styles.ohhtext} stylebutton={this.state.pattern[this.state.isNow] == 2 ? styles.ohhBig : styles.ohh } />
-        <PENCETAN sound={ ()=> this.LAGUNYA('ayy.wav',3)} nama="ayy" styletext={styles.ayytext} stylebutton={this.state.pattern[this.state.isNow] == 3 ? styles.ayyBig : styles.ayy } />
+        <Text style={styles.score}> exp   {this.state.score}</Text>
+        <Text style={styles.text}>  HIT   {this.state.hit}  </Text>
+        <Text style={styles.combo}> isnow {this.state.isNow}</Text>
+        
+          {/* <FlatList
+              data={config}
+              keyExtractor={item => item.id_button}
+              renderItem={({ item, index }) => {
+                return (
+                //    <View >
+                //     <Text style={styles[item.nama + 'text']}>{item.nama_sound} </Text>
+                //    </View> 
+                <TouchableOpacity onPressIn={()=> this.LAGUNYA(`${item.nama_sound}`,index + 1)} style={ this.state.pattern[this.state.isNow] == item.id_button ? styles[item.nama]Big : styles[item.nama] }>
+                  <Text style={styles[item.nama + 'text']}>{item.nama}</Text>
+                </TouchableOpacity>                
+                );
+              }}
+            /> */}
+        {/* <PENCETAN sound={ ()=> this.LAGUNYA(`${item.nama_sound}`,index + 1)} nama={item.nama} styletext={styles[item.nama + 'text']} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles[item.nama + 'Big'] : styles[item.nama] } /> */}
 
+        <PENCETAN sound={ ()=> this.LAGUNYA('wik.wav',1)} nama="wik" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles.wikBig : styles.wik } />
+        <PENCETAN sound={ ()=> this.LAGUNYA('ihh.wav',2)} nama="ihh" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 2 ? styles.ohhBig : styles.ohh } />
+        <PENCETAN sound={ ()=> this.LAGUNYA('ayy.wav',3)} nama="ayy" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 3 ? styles.ayyBig : styles.ayy } />
+         
         <CupertinoHeaderWithAddButton style={styles.cupertinoHeaderWithAddButton}/>
+          
+          {
+            this.state.loop == false ? 
+            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 458.45}}  block success>
+              <Text>NYALAKEUN</Text>
+            </Button> 
+            :
+            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 458.45}} block danger>
+                <Text>MATIKEUN</Text>
+            </Button>
+          }
+          
+
         <CupertinoToolbar style={styles.cupertinoToolbar} />
       </View>
     )
   }
 }
 
-export default home
+const mapStateToProps = state => {
+  return {
+    GameConfig: state.reConfig.ListConfig.result
+  };
+};
+export default connect(mapStateToProps)(home)
 
 
 const styles = StyleSheet.create({
@@ -157,6 +216,12 @@ const styles = StyleSheet.create({
     height: 506.13,
     position: "absolute",
     opacity: 0.25
+  },
+  backsoundON:{
+    top: 458.45
+  },
+  backsoundOFF:{
+    top: 458.45
   },
   wik: {
     top: 328.45,
@@ -227,7 +292,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     borderRadius: 100
   },
-  ohhtext: {
+  ihhtext: {
     color: "rgba(15,14,14,1)",
     fontSize: 20,
     fontFamily: "roboto-900",

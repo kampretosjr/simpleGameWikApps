@@ -5,17 +5,25 @@ import leaderboard from '../../screens/leaderboard'
 import login from '../../screens/login'
 import register from '../../screens/register'
 import sider from '../../screens/sideeffect'
+import bridge from '../../screens/bridge'
 import  { Text } from 'react-native';
 
 
 const AppNavigator = createStackNavigator(
   {
-      Home:{
+    bridge:{
+      screen: bridge,
+      navigationOptions: () => ({
+        header: null
+      }),
+    },
+      Game:{
         screen: Home,
         navigationOptions: () => ({
           header: null
         }),
       },
+     
       leaderboard:{
         screen:leaderboard,
         navigationOptions:{
