@@ -27,6 +27,27 @@ const buku = (state = initialState, action) => {
         isFulfilled: true,
         ListLeaderboard: action.payload.data,
       };
+////////////////////////////////////////////////////////
+case 'GET_SCORE_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isFulfilled: false,
+        isRejected: false,
+      };
+    case 'GET_SCORE_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isRejected: true,
+      };
+    case 'GET_SCORE_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isFulfilled: true,
+        ListLeaderboard: action.payload.data,
+      };
 ///////////////////////////////////////////////////////
     case "POST_LEADERBOARD_PENDING":
         return {

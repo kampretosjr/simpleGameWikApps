@@ -9,12 +9,19 @@ export const getleaderboard = () => {
     payload: axios.get(URL+'/leaderboard'),
   };
 };
+///////////////////////////////
+export const getScore = () => {
+  return {
+    type: 'GET_SCORE',
+    payload: axios.get(URL+'/leaderboard/score'),
+  };
+};
 /////////////////////////////////////////////
 export const postleaderboard = (data) => {
   //console.log('ini dari aksi',data[0]);
   return {
     type: "POST_LEADERBOARD",
-    payload: axios.post(URL+'/leaderboard', data[0])
+    payload: axios.post(URL+'/leaderboard', data)
   };
 };
 /////////////////////////////////////////////

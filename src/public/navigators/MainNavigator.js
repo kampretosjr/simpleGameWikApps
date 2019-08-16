@@ -33,7 +33,7 @@ const AppNavigator = createStackNavigator(
       login:{
         screen: login,
         navigationOptions: {
-          header: null
+          title:"LOG in"
         },
       },
       register:{

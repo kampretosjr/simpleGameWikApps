@@ -17,6 +17,7 @@ class SideBar extends Component {
             username: '',
             foto: '',
             token: '',
+            score:''
         }
 
         storage.getItem('id_player', (err, result) => {
@@ -25,6 +26,13 @@ class SideBar extends Component {
                     id_player: result
                 })
             }
+        })
+        storage.getItem('score', (err, result) => {
+          if (result) {
+              this.setState({
+                  score: result
+              })
+          }
         })
 
         storage.getItem('email', (err, result) => {
@@ -70,11 +78,12 @@ class SideBar extends Component {
                     id_player: ''
                 })
                 storage.clear()
-                this.props.navigation.navigate('Auth')
+                this.props.navigation.navigate('Game')
             })
             .catch(() => {
+              this.props.navigation.navigate('bridge')
                 storage.clear()
-                alert('Logout failed!')
+                alert('Berhasil Keluar!')
             })
     }
 
@@ -93,14 +102,14 @@ class SideBar extends Component {
                 }
 
                 <View style={styles.viewProfileData}>
-                    <Text style={[styles.profileData, styles.capitalize]}>{this.state.fullname}</Text>
-                    <Text style={styles.profileData}>{this.state.username}</Text>
-                    <Text style={styles.profileData}>Score: 521</Text>
+                    <Text style={[styles.profileData, styles.capitalize]}>{this.state.email == '' ? 'anda belum masuk' :this.state.email }</Text>
+                    <Text style={styles.profileData}>{this.state.username == '' ? 'silahkan login dulu ' :this.state.username}</Text>
+                    <Text style={styles.profileData}>{this.state.score}</Text>
                 </View>
 
                 <View style={styles.flhome}>
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('LeaderBoards')}>
+                        onPress={() => this.props.navigation.navigate('leaderboard')}>
                         <Text style={styles.drawer}>
                             <Icon name="trophy" type="FontAwesome5" style={[styles.leaderBoardColor, styles.icon]} /> Leaderboards
                             </Text>
@@ -115,7 +124,7 @@ class SideBar extends Component {
                             </TouchableOpacity>
                             :
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Auth')}>
+                                onPress={() => this.props.navigation.navigate('register')}>
                                 <Text style={styles.drawer}>
                                     <Icon name="sign-in" type="FontAwesome" style={[styles.signInColor, styles.icon]} /> Sign In
                         </Text>
@@ -146,7 +155,7 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize'
     },
     imageBackground: {
-        backgroundColor: '#3F51B5',
+        backgroundColor: '#5dcc41',
         width: 'auto',
         height: 180
     },

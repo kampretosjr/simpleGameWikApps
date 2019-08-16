@@ -30,7 +30,7 @@ export const logout = (param) =>{
   //console.log('action id', param)
 	return{
     type: 'LOGOUT_PLAYER',
-		payload: axios.patch(URL +`/player/logout${param}`)
+		payload: axios.patch(URL +`/player/logout/${param}`)
 	}
 }
 /////////////////////////////////////////////

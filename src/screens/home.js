@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet,Text, View, Image,FlatList,TouchableOpacity } from "react-native";
+import { StyleSheet,Text, View, Image,FlatList,TouchableOpacity ,Alert, AsyncStorage as storage} from "react-native";
 import { Container,  Content, List, ListItem, Thumbnail,Button,  Left, Body, Right } from 'native-base';
 import PENCETAN from "../symbols/ButtonInfo";
 import CupertinoHeaderWithAddButton from "../symbols/HeaderWithAddButton";
@@ -7,6 +7,8 @@ import CupertinoToolbar from "../symbols/Toolbar";
 import { connect } from 'react-redux'
 import Sound from "react-native-sound";
 import { getConfig } from "../public/redux/actions/gameconfig";
+import { getScore } from "../public/redux/actions/leaderboard";
+import { postleaderboard } from "../public/redux/actions/leaderboard";
 
 export class home extends Component {
   constructor(props) {
@@ -16,25 +18,42 @@ export class home extends Component {
       button:1,
       timer:null,
       hasil: 0,
-      combo: 5,
+      combo: 0,
       score: 0,
-      pattern: [1,2,3],
+      pattern: [1,2,3,2],
       isNow: 0,
       showToast:false,
       config:[],
       pause: false,
-      loop:false
+      loop:false,
+      id_player: '',
+      LeaderB: [],
+
 
       }
+      storage.getItem('id_player', (err, result) => {
+        if (result) {
+            this.setState({
+                id_player: result
+            })
+        }
+    })
   }
 
   async componentDidMount() {
     await this.props.dispatch(getConfig());
-    const config = await this.props.GameConfig;
-    this.setState({ config });
-  }
+    await this.props.dispatch(getScore());
 
+    const LeaderB = await this.props.Lead;
+    const config = await this.props.GameConfig;
+
+    this.setState({ config });
+    this.setState({ LeaderB });
+
+  }
+  
   LAGUNYA = async (nada,tombol) =>{
+
         if (this.state.timer) { 
           clearTimeout(this.state.timer); 
           await this.setState({ timer :null }) 
@@ -42,8 +61,29 @@ export class home extends Component {
 
         await this.setState({
           timer :setTimeout(()=>{ 
-            alert("skor anda" + this.state.score );
-             this.setState({
+            var id_player = this.state.id_player
+            var score = this.state.score
+            var data = {
+              id_player,score
+            }
+            // var lastscore = this.state.LeaderB['9']
+              // if( this.state.score > lastscore  ){
+                if( this.state.score > 10  ){
+                Alert.alert(
+                  'skor kamu mencapai  ,mau di masukian ke leaderboard? ',
+                  `${this.state.score}`,
+                  [
+                    {text: 'gak mau', onPress: () => console.log('gak mau pressed')},
+                    {text: 'mau', onPress: () => this.props.dispatch(postleaderboard(data))},
+                  ],
+                  {cancelable: false},
+                );
+                // this.props.dispatch(postleaderboard(data))
+              }else{
+                alert("coba lagi")
+              }
+
+              this.setState({
               hit:this.state.hit * 0,
               score: this.state.score * 0,
               combo: this.state.combo * 0,
@@ -59,11 +99,12 @@ export class home extends Component {
 
             if (this.state.pattern[this.state.isNow] === tombol) {
               if (this.state.pattern.length -1 <= this.state.isNow   ) {
-                clearTimeout(this.state.timer); 
+                // clearTimeout(this.state.timer); 
                 await this.setState({
                       combo: this.state.combo + 1,
                       isNow: this.state.isNow * 0,
-                      timer :null
+                      score: this.state.score + 10,
+
                   })
                   setTimeout(()=>{  
                       const next = new Sound('gtr.wav',Sound.MAIN_BUNDLE,  err => {
@@ -72,11 +113,18 @@ export class home extends Component {
                     }, 300)
                     
               } else{                
-
-                await this.setState({
-                  score: this.state.score + 10,
-                  isNow: this.state.isNow + 1,
-              })
+                if (this.state.combo > 0) {
+                    this.setState({
+                      score: (this.state.score + 10) + (this.state.combo / 2) ,
+                      isNow: this.state.isNow + 1,
+                  })
+                } else {
+                    this.setState({
+                      score: this.state.score + 10,
+                      isNow: this.state.isNow + 1,
+                  })
+                }
+                
               }
           }
           else {
@@ -92,7 +140,7 @@ export class home extends Component {
             })
         }
 
-        await this.setState({
+          this.setState({
               button: this.state.pattern[this.state.isNow]
           })
 
@@ -107,7 +155,7 @@ export class home extends Component {
       clearTimeout(this.state.timer); 
     }
 
-    LOOPs(nada,tombol) {
+    LOOPs (nada,tombol) {
       if (this.state.loop == false ) {
         this.suara = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
         this.suara.setNumberOfLoops(-1);
@@ -127,9 +175,18 @@ export class home extends Component {
     }
     
   render() {
-    const {config} = this.state
-    console.log("aa",config)
+    console.log("jancok",this.state.LeaderB[9] )
+    var data = this.state.LeaderB
+    data.map(item => {
+      console.log(item.score)
+    })
+
+    // var numbers = [4, 9, 16, 25];
+    // var x = data.map(score)
+    // console.log(x );s
+
     console.log("isnow",this.state.isNow)
+
     return (
       <View style={styles.root}>
         <Image
@@ -138,8 +195,7 @@ export class home extends Component {
           style={styles.image}
         />        
         <Text style={styles.score}> exp   {this.state.score}</Text>
-        <Text style={styles.text}>  HIT   {this.state.hit}  </Text>
-        <Text style={styles.combo}> isnow {this.state.isNow}</Text>
+        <Text style={styles.combo}>combo {this.state.combo}</Text>
         
           {/* <FlatList
               data={config}
@@ -158,24 +214,22 @@ export class home extends Component {
         {/* <PENCETAN sound={ ()=> this.LAGUNYA(`${item.nama_sound}`,index + 1)} nama={item.nama} styletext={styles[item.nama + 'text']} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles[item.nama + 'Big'] : styles[item.nama] } /> */}
 
         <PENCETAN sound={ ()=> this.LAGUNYA('wik.wav',1)} nama="wik" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 1 ? styles.wikBig : styles.wik } />
-        <PENCETAN sound={ ()=> this.LAGUNYA('ihh.wav',2)} nama="ihh" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 2 ? styles.ohhBig : styles.ohh } />
+        <PENCETAN sound={ ()=> this.LAGUNYA('ihh.wav',2)} nama="ihh" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 2 ? styles.ihhBig : styles.ihh } />
         <PENCETAN sound={ ()=> this.LAGUNYA('ayy.wav',3)} nama="ayy" styletext={styles.wiktext} stylebutton={this.state.pattern[this.state.isNow] == 3 ? styles.ayyBig : styles.ayy } />
          
         <CupertinoHeaderWithAddButton style={styles.cupertinoHeaderWithAddButton}/>
           
           {
             this.state.loop == false ? 
-            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 458.45}}  block success>
+            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 310.45}}  block success>
               <Text>NYALAKEUN</Text>
             </Button> 
             :
-            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 458.45}} block danger>
+            <Button onPressIn={()=> this.LOOPs('backsound.wav')} style={{top: 310.45}} block danger>
                 <Text>MATIKEUN</Text>
             </Button>
           }
-            <Button onPressIn={()=> this.killTime()} style={{top: 458.45}} block primary>
-                <Text>MATIKEUN</Text>
-            </Button>
+           
 
         <CupertinoToolbar style={styles.cupertinoToolbar} />
       </View>
@@ -185,7 +239,8 @@ export class home extends Component {
 
 const mapStateToProps = state => {
   return {
-    GameConfig: state.reConfig.ListConfig.result
+    GameConfig: state.reConfig.ListConfig.result,
+    Lead: state.reLeaderboard.ListLeaderboard.result
   };
 };
 export default connect(mapStateToProps)(home)
@@ -209,9 +264,8 @@ const styles = StyleSheet.create({
   score: {
     top: 210.42,
     left: 13.76,
-    width: 100,
-    height: 42.13,
-    position: "absolute",
+    width: 300,
+    height: 142.13,
     fontSize: 25,
     fontFamily: "roboto-900",
     fontWeight: "500"
@@ -260,7 +314,7 @@ const styles = StyleSheet.create({
     top: 318.45,
     left: 13.76,
     width: 100,
-    height: 72.13,
+    height: 82.13,
     position: "absolute",
     textShadowColor:"darkblue",
     flex: 1,
@@ -279,7 +333,7 @@ const styles = StyleSheet.create({
     fontFamily: "roboto-900",
     fontWeight: "500"
   },
-  ohh: {
+  ihh: {
     top: 328.42,
     left: 130,
     width: 100,
@@ -294,11 +348,11 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     borderRadius: 100
   },
-  ohhBig: {
+  ihhBig: {
     top: 318.45,
     left: 130,
     width: 100,
-    height: 72.13,
+    height: 82.13,
     position: "absolute",
     flex: 1,
     backgroundColor: "rgba(248,231,28,1)",
@@ -334,7 +388,7 @@ const styles = StyleSheet.create({
     top: 318.45,
     left: "68.4%",
     width: 100,
-    height: 72.13,
+    height: 82.13,
     position: "absolute",
     flex: 1,
     backgroundColor: "rgba(64,255,0,1)",

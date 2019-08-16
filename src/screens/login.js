@@ -27,7 +27,7 @@ class Login extends Component {
                     password: ''
                 })
                 storage.setItem('token')
-                this.props.navigation.navigate('App')
+                this.props.navigation.navigate('Game')
             })
             .catch(() => {
                 alert('username atau password salah!')
@@ -42,42 +42,23 @@ class Login extends Component {
         }
         return (
             <Container>
-                <Header>
-                    <Left style={styles.leftSide}>
-                        <Text style={styles.txtLogin}>Login</Text>
-                    </Left>
-                    <Body>
-                        <Text></Text>
-                    </Body>
-                </Header>
-                <Image source={require('../assets/images/output-onlinepngtools-(3).png')} style={styles.img} />
+                
+                <Image resizeMode={"stretch"} source={require('../assets/images/l-20181108161436lagu-1.png')} style={styles.img} />
                 <View style={{ marginTop: 100 }}>
                     <Form style={styles.container}>
                         <Item floatingLabel>
-                            <Label style={{ color: 'teal' }}>Username</Label>
+                            <Label style={{ color: 'black' }}>Username</Label>
                             <Input onChangeText={username => this.setState({ username })} />
                         </Item>
                         <Item floatingLabel>
-                            <Label style={{ color: 'teal' }}>Password</Label>
+                            <Label style={{ color: 'black' }}>Password</Label>
                             <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} />
                         </Item>
                     </Form>
-                    <View style={styles.viewAction}>
-                        <TouchableOpacity
-                            style={styles.btnSignUp}
-                            onPress={() => this.props.navigation.navigate('Register')}
-                        >
-                            <Text style={styles.txtSignUp}>Sign Up</Text>
-                        </TouchableOpacity>
-                        <Button
-                            rounded
-                            primary
-                            style={styles.btnSignIn}
-                            onPress={() => this._signInAsync(data)}
-                        >
-                            <Icon name="arrow-right" type="FontAwesome" />
-                        </Button>
-                    </View>
+                    <Button onPress={() => this._signInAsync(data)} style={{top: 38.45}} block success>
+                        <Text>login</Text>
+                    </Button>
+                    
                 </View>
                 <TouchableOpacity
                     style={styles.btnSkip}
@@ -103,8 +84,11 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     img: {
-        position: 'absolute',
-        alignSelf: 'flex-end'
+        left: "0%",
+        width: 360,
+        height: 576.13,
+        position: "absolute",
+        opacity: 0.25
     },
     viewAction: {
         marginVertical: 60,
