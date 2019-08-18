@@ -1,1 +1,2 @@
-# simpleGameWikApps with react-native-sound (not for kids)
+# Simple Tap game with react-native-sound
+
