@@ -78,10 +78,13 @@ class SideBar extends Component {
                     id_player: ''
                 })
                 storage.clear()
-                this.props.navigation.navigate('Game')
+                this.props.navigation.navigate('auth')
             })
             .catch(() => {
-              this.props.navigation.navigate('bridge')
+              this.props.navigation.navigate('auth')
+              this.setState({
+                id_player: ''
+            })
                 storage.clear()
                 alert('Berhasil Keluar!')
             })
@@ -119,12 +122,12 @@ class SideBar extends Component {
                             <TouchableOpacity
                                 onPress={() => this._signOutAsync()}>
                                 <Text style={styles.drawer}>
-                                    <Icon name="sign-out" type="FontAwesome" style={[styles.signOutColor, styles.icon]} /> Sign Out
+                                    <Icon name="sign-out" type="FontAwesome" style={[styles.signOutColor, styles.icon]} /> Sign Out (pencet 2x)
                         </Text>
                             </TouchableOpacity>
                             :
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('register')}>
+                                onPress={() => this.props.navigation.navigate('login')}>
                                 <Text style={styles.drawer}>
                                     <Icon name="sign-in" type="FontAwesome" style={[styles.signInColor, styles.icon]} /> Sign In
                         </Text>

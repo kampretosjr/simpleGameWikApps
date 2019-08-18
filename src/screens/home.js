@@ -68,16 +68,31 @@ export class home extends Component {
             }
             // var lastscore = this.state.LeaderB['9']
               // if( this.state.score > lastscore  ){
+                
                 if( this.state.score > 10  ){
-                Alert.alert(
-                  'skor kamu mencapai  ,mau di masukian ke leaderboard? ',
-                  `${this.state.score}`,
-                  [
-                    {text: 'gak mau', onPress: () => console.log('gak mau pressed')},
-                    {text: 'mau', onPress: () => this.props.dispatch(postleaderboard(data))},
-                  ],
-                  {cancelable: false},
-                );
+                  if(id_player == "" ){
+                    Alert.alert(
+                      'mau skornya di masukin leaderboard?',
+                      `login dulu ya`,
+                      [
+                        {text: 'gak mau', onPress: () => console.log('gak mau pressed')},
+                        {text: 'login', onPress: () => this.props.navigation.navigate('login')},
+                      ],
+                      {cancelable: false},
+                    )
+                  }else{
+                    Alert.alert(
+                      'skor kamu mencapai ',
+                      `${this.state.score}`,
+                     
+                      [
+                        {text: 'gak mau', onPress: () => console.log('gak mau pressed')},
+                        {text: 'masukan ke leaderboard?', onPress: () => this.props.dispatch(postleaderboard(data))},
+                      ],
+                      {cancelable: false},
+                    );
+                  }
+                
                 // this.props.dispatch(postleaderboard(data))
               }else{
                 alert("coba lagi")
@@ -147,28 +162,24 @@ export class home extends Component {
           await this.setState({ hit:this.state.hit + 1 })
     }
 
-    killTime(){
-      alert('stet')
-      this.setState({
-        timer :null,
-      })
-      clearTimeout(this.state.timer); 
-    }
 
-    LOOPs (nada,tombol) {
+    LOOPs = async (nada,tombol) => {
       if (this.state.loop == false ) {
         this.suara = new Sound(nada,Sound.MAIN_BUNDLE,  err => {
         this.suara.setNumberOfLoops(-1);
         this.suara.setVolume(0.35);
         this.suara.play(() => this.suara.release());
         });
-          this.setState({
+          await this.setState({
             loop:true
           })
       } 
       else {
-        this.suara.setVolume(0);
-        this.setState({
+        await this.suara.stop(() => {
+          // Note: If you want to play a sound after stopping and rewinding it,
+          // it is important to call play() in a callback.
+        });
+        await this.setState({
           loop:false
         })
       }

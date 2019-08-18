@@ -70,10 +70,8 @@ const buku = (state = initialState, action) => {
       tampung.setItem("username",action.payload.data.result.username)
       tampung.setItem("email",action.payload.data.result.email)
       tampung.setItem("foto",action.payload.data.result.foto)
-      tampung.setItem("score",action.payload.data.result.score.toString())
-
-
       tampung.setItem("token",action.payload.data.result.token)
+      // tampung.setItem("score",action.payload.data.result.score.toString())
 
       return {
         ...state,

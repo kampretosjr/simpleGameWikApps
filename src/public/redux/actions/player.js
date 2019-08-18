@@ -10,11 +10,11 @@ export const getPlayer = () => {
   };
 };
 /////////////////////////////////////////////
-export const postPlayer = (data) => {
+export const registPlayer = (data) => {
   //console.log('ini dari aksi',data[0]);
   return {
     type: "POST_PLAYER",
-    payload: axios.post(URL+'/player', data,{})
+    payload: axios.post(URL+'/player', data)
   };
 };
 /////////////////////////////////////////////

@@ -26,8 +26,9 @@ class Login extends Component {
                     username: '',
                     password: ''
                 })
+                
                 storage.setItem('token')
-                this.props.navigation.navigate('Game')
+                this.props.navigation.navigate('auth')
             })
             .catch(() => {
                 alert('username atau password salah!')
