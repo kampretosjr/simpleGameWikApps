@@ -16,10 +16,9 @@
 - [Screenshots](#screenshots)
 - [Release APK](#release-apk)
 - [Related Project](#related-project-backend)
-- [Contributors](#contributors)
 
 ## Introduction
-<b>Hit Hit Baam</b> is a game where you have to press and tap the big button in accordance with a predetermined pattern,if after 4 seconds you not press big button then you will lose
+<b>WikApps</b> is a game where you have to press and tap the big button in accordance with a predetermined pattern,if after 4 seconds you not press big button then you will lose
 
 ## Features
 * Users must sign in if users want to submit their score to database
