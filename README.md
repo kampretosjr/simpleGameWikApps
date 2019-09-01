@@ -39,7 +39,11 @@
 5. Type `react-native run-android` for run this app. ***Make sure your device is connected with debugging mode***.
 
 ## Screenshots
-
+<div align="center">
+    <img width="250" src="https://raw.githubusercontent.com/kampretosjr/simpleGameWikApps-FrontEnd/master/screenshoot/Screenshot_2019-09-01-21-55-19-137_com.wikapps.jpg">    
+    <img width="250" src="https://raw.githubusercontent.com/kampretosjr/simpleGameWikApps-FrontEnd/master/screenshoot/Screenshot_2019-09-01-21-55-35-864_com.wikapps.jpg">
+    <img width="250" src="https://raw.githubusercontent.com/kampretosjr/simpleGameWikApps-FrontEnd/master/screenshoot/Screenshot_2019-09-01-21-56-11-605_com.wikapps.jpg">
+</div>
 
 ## Release APK
 <a href="https://drive.google.com/file/d/1RNj5fWgeBNrsER470yqB2stZemFY5KbR/view?usp=sharing">
